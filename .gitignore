@@ -17,3 +17,6 @@ vendor/
 # Project build file
 go-template 
 main
+
+# IDE
+.idea
