@@ -11,5 +11,12 @@
 |--- endpoints.go
 |--- structs.go
 |--- README.md
+|--- Dalle2
+|
+|
+|
+|
+|--- GPT
+
 
 ```
