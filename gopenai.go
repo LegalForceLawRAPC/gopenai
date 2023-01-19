@@ -27,3 +27,12 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 	log.Println(l)
 	return nil
 }
+
+func (c *Client) ListModels() *ListModels {
+	l := &ListModels{}
+	err := c.Do(openAiEndpoints["listModels"], &l)
+	if err != nil {
+		return nil
+	}
+	return l
+}
