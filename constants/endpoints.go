@@ -12,16 +12,23 @@ var openAiEndpoints = endpoints{
 
 var dalleEndpoints = endpoints{
 	"generateImages": {
-		Endpoint: "/v1/images/generations",
+		Endpoint: "v1/images/generations",
 		Method:   "POST",
 		Body:     nil,
+	},
+	"editImages": {
+		Endpoint:    "v1/images/edits",
+		Method:      "POST",
+		Body:        nil,
+		ContentType: "multipart/form-data",
 	},
 }
 
 type RequestData struct {
-	Endpoint string
-	Method   string
-	Body     interface{}
+	Endpoint    string
+	Method      string
+	Body        interface{}
+	ContentType string
 }
 
 func GetOpenAIEndpoint(endpointType string) RequestData {

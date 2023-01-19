@@ -27,6 +27,8 @@ func NewClient() *Client {
 
 // Connect to the OpenAI API
 func (c *Client) Connect(apiKey string, organisation string) error {
+	constants.SetApiKey(apiKey)
+	constants.SetOrgId(organisation)
 	c.basicAuth.apiKey = apiKey
 	c.basicAuth.organisation = organisation
 	l := &ListModels{}

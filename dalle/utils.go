@@ -20,7 +20,11 @@ func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError 
 		return &errors.ErrDefault
 	}
 	req.Header.Add("Authorization", d.getBearerToken())
-	req.Header.Add("Content-Type", "application/json")
+	if data.ContentType != "" {
+		req.Header.Add("Content-Type", data.ContentType)
+	} else {
+		req.Header.Add("Content-Type", "application/json")
+	}
 	res, err := d.Client.Do(req)
 	if err != nil {
 		return errors.HandleHttpError(err, res.StatusCode)
