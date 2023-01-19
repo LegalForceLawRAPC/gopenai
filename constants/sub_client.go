@@ -4,10 +4,10 @@ import "net/http"
 
 type SubClient struct {
 	Client    *http.Client
-	BasicAuth basicAuth
+	BasicAuth BasicAuth
 }
 
-type basicAuth struct {
+type BasicAuth struct {
 	ApiKey       string
 	Organisation string
 }

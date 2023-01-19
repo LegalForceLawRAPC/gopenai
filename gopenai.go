@@ -47,5 +47,11 @@ func (c *Client) ListModels() *ListModels {
 }
 
 func (c *Client) Dalle() *dalle.Dalle {
-	return &dalle.Dalle{}
+	return &dalle.Dalle{
+		Client: c.client,
+		BasicAuth: constants.BasicAuth{
+			ApiKey:       c.basicAuth.apiKey,
+			Organisation: c.basicAuth.organisation,
+		},
+	}
 }

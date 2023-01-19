@@ -1,6 +1,7 @@
 package dalle
 
 import (
+	bytes2 "bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/LegalForceLawRAPC/gopenai/constants"
@@ -10,11 +11,16 @@ import (
 )
 
 func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError {
-	req, err := http.NewRequest(data.Method, fmt.Sprintf("%s/%s", constants.BaseURL, data.Endpoint), nil)
+	jsonData, err := json.Marshal(data.Body)
+	if err != nil {
+		return &errors.ErrDefault
+	}
+	req, err := http.NewRequest(data.Method, fmt.Sprintf("%s/%s", constants.BaseURL, data.Endpoint), bytes2.NewBuffer(jsonData))
 	if err != nil {
 		return &errors.ErrDefault
 	}
 	req.Header.Add("Authorization", d.getBearerToken())
+	req.Header.Add("Content-Type", "application/json")
 	res, err := d.Client.Do(req)
 	if err != nil {
 		return errors.HandleHttpError(err, res.StatusCode)
