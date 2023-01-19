@@ -1,17 +1,25 @@
 package gopenai
 
 import (
-	"log"
 	"net/http"
+	"time"
 )
 
+var c *http.Client
+
 func NewClient() *Client {
+	c = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConns:    10,
+			IdleConnTimeout: 30 * time.Second,
+		},
+	}
 	return &Client{
 		basicAuth: basicAuth{
 			apiKey:       "",
 			organisation: "",
 		},
-		client: &http.Client{},
+		client: c,
 	}
 }
 
@@ -24,7 +32,6 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 	if err != nil {
 		return err.Error
 	}
-	log.Println(l)
 	return nil
 }
 

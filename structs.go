@@ -1,10 +1,14 @@
 package gopenai
 
-import "net/http"
+import (
+	"github.com/LegalForceLawRAPC/gopenai/constants"
+	"net/http"
+)
 
 type Client struct {
 	basicAuth basicAuth
 	client    *http.Client
+	subClient constants.SubClient
 }
 
 type basicAuth struct {
