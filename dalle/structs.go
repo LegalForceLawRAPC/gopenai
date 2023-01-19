@@ -9,3 +9,10 @@ type GenerateImagesPrompt struct {
 	N      int    `json:"n"`
 	Size   string `json:"size"`
 }
+
+type GenerateImagesResponse struct {
+	Created int `json:"created"`
+	Data    []struct {
+		Url string `json:"url"`
+	} `json:"data"`
+}

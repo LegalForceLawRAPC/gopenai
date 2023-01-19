@@ -1,14 +1,13 @@
 package gopenai
 
 import (
-	"github.com/LegalForceLawRAPC/gopenai/constants"
 	"net/http"
 )
 
 type Client struct {
 	basicAuth basicAuth
 	client    *http.Client
-	subClient constants.SubClient
+	SubClient interface{}
 }
 
 type basicAuth struct {
@@ -16,8 +15,7 @@ type basicAuth struct {
 	organisation string
 }
 
-type RequestData struct {
-	endpoint string
-	method   string
-	body     interface{}
+type Dalle struct {
+	client    *http.Client
+	basicAuth basicAuth
 }

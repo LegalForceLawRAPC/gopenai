@@ -1,4 +1,4 @@
-package gopenai
+package dalle
 
 import (
 	"encoding/json"
@@ -9,13 +9,13 @@ import (
 	"net/http"
 )
 
-func (c *Client) Do(data constants.RequestData, i interface{}) *errors.HttpError {
+func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError {
 	req, err := http.NewRequest(data.Method, fmt.Sprintf("%s/%s", constants.BaseURL, data.Endpoint), nil)
 	if err != nil {
 		return &errors.ErrDefault
 	}
-	req.Header.Add("Authorization", c.getBearerToken())
-	res, err := c.client.Do(req)
+	req.Header.Add("Authorization", d.getBearerToken())
+	res, err := d.Client.Do(req)
 	if err != nil {
 		return errors.HandleHttpError(err, res.StatusCode)
 	}
@@ -31,6 +31,6 @@ func (c *Client) Do(data constants.RequestData, i interface{}) *errors.HttpError
 	return nil
 }
 
-func (c *Client) getBearerToken() string {
-	return fmt.Sprintf("Bearer %s", c.basicAuth.apiKey)
+func (d *Dalle) getBearerToken() string {
+	return fmt.Sprintf("Bearer %s", d.BasicAuth.ApiKey)
 }

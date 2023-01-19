@@ -1,6 +1,8 @@
 package gopenai
 
 import (
+	"github.com/LegalForceLawRAPC/gopenai/constants"
+	"github.com/LegalForceLawRAPC/gopenai/dalle"
 	"net/http"
 	"time"
 )
@@ -28,7 +30,7 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 	c.basicAuth.apiKey = apiKey
 	c.basicAuth.organisation = organisation
 	l := &ListModels{}
-	err := c.Do(openAiEndpoints["listModels"], &l)
+	err := c.Do(constants.GetOpenAIEndpoint("listModels"), &l)
 	if err != nil {
 		return err.Error
 	}
@@ -37,9 +39,13 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 
 func (c *Client) ListModels() *ListModels {
 	l := &ListModels{}
-	err := c.Do(openAiEndpoints["listModels"], &l)
+	err := c.Do(constants.GetOpenAIEndpoint("listModels"), &l)
 	if err != nil {
 		return nil
 	}
 	return l
+}
+
+func (c *Client) Dalle() *dalle.Dalle {
+	return &dalle.Dalle{}
 }
