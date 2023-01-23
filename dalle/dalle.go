@@ -1,9 +1,14 @@
 package dalle
 
 import (
+	bytes2 "bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/LegalForceLawRAPC/gopenai/constants"
 	"io"
 	"log"
+	"mime/multipart"
+	"net/http"
 	"os"
 )
 
@@ -68,18 +73,90 @@ func (e *EditImagesRequest) AddMask(mask []byte) *EditImagesRequest {
 }
 
 func (e *EditImagesRequest) Do() (*EditImageResponse, error) {
-	//res := &EditImageResponse{}
-	//body := &bytes2.Buffer{}
-	//writer := multipart.NewWriter(body)
-	//part, err := writer.CreateFormFile("image", "image.png")
-	//if err != nil {
-	//	return nil, err
-	//}
-	//req, err := http.NewRequest(e.req.Method, fmt.Sprintf("%s/%s", constants.BaseURL, e.req.Endpoint), bytes2.NewBuffer(m))
-	//if err != nil {
-	//	return nil, err
-	//}
-	//req.Header.Set("Authorization", constants.GetToken())
-	return nil, nil
+	r := &EditImageResponse{}
+	var (
+		buf = new(bytes2.Buffer)
+		w   = multipart.NewWriter(buf)
+	)
+	// If image is not nil, add it to the request
+	if e.Image != nil {
+		part, err := w.CreateFormFile("image", "/img/image")
+		if err != nil {
+			// multipart form error
+			return nil, err
+		}
+		_, err = part.Write(e.Image)
+		if err != nil {
+			// multipart form error
+			return nil, err
+		}
+	}
+	// If mask is not nil, add it to the request
+	if e.Mask != nil {
+		part, err := w.CreateFormFile("mask", "/img/mask")
+		if err != nil {
+			// multipart form error
+			return nil, err
+		}
+		_, err = part.Write(e.Mask)
+		if err != nil {
+			// multipart form error
+			return nil, err
+		}
+	}
+	// Add the json data to the request
+	prompt := e.req.Body.(EditImagesPrompt).Prompt
+	n := e.req.Body.(EditImagesPrompt).N
+	size := e.req.Body.(EditImagesPrompt).Size
+	err := w.WriteField("prompt", prompt)
+	if err != nil {
+		return nil, err
+	}
+	err = w.WriteField("n", fmt.Sprintf("%d", n))
+	if err != nil {
+		return nil, err
+	}
+	err = w.WriteField("size", size)
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		// multipart form error
+		return nil, err
+	}
+	request, err := http.NewRequest(e.req.Method, fmt.Sprintf("%s/%s", constants.BaseURL, e.req.Endpoint), buf)
+	if err != nil {
+		// http request error
+		return nil, err
+	}
+	// Adding the bearer token header
+	request.Header.Set("Authorization", fmt.Sprintf("%s", constants.GetToken()))
+	// Now we add the multipart file data
+	// The image and mask are added as multipart form data
+	request.Header.Set("Content-Type", w.FormDataContentType())
+	// Send the request
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		// http request error
+		return nil, err
+	}
+	// Read the response
+	respBodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		// io error
+		return nil, err
+	}
+	// Unmarshal the response into the EditImageResponse struct
+	err = json.Unmarshal(respBodyBytes, r)
+	if err != nil {
+		// json unmarshalling error
+		return nil, err
+	}
 
+	if resp.StatusCode != http.StatusOK {
+		// The request was not successful
+		return r, fmt.Errorf("request failed with status code %d", resp.StatusCode)
+	}
+
+	return r, nil
 }
