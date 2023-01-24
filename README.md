@@ -1,4 +1,4 @@
-# GopenAPI (Go Wrapper to work with OpenAI APIs)
+# GopenAI (Go Wrapper to work with OpenAI APIs)
 
 ## Structuring
 
