@@ -40,12 +40,17 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 }
 
 func (c *Client) ListModels() *ListModels {
-	l := &ListModels{}
-	err := c.Do(constants.GetOpenAIEndpoint("listModels"), &l)
-	if err != nil {
-		return nil
+	if availableModels != nil {
+		return availableModels
+	} else {
+		l := &ListModels{}
+		err := c.Do(constants.GetOpenAIEndpoint("listModels"), &l)
+		if err != nil {
+			return nil
+		}
+		availableModels = l
+		return l
 	}
-	return l
 }
 
 func (c *Client) Dalle() *dalle.Dalle {

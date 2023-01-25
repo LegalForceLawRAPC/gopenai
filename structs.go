@@ -4,6 +4,8 @@ import (
 	"net/http"
 )
 
+var availableModels *ListModels
+
 type Client struct {
 	basicAuth basicAuth
 	client    *http.Client
