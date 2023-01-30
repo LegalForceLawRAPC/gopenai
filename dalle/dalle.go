@@ -1,15 +1,16 @@
 package dalle
 
 import (
-	bytes2 "bytes"
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/LegalForceLawRAPC/gopenai/constants"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
+
+	"github.com/LegalForceLawRAPC/gopenai/constants"
 )
 
 func (d *Dalle) GenerateImages(prompt string, n int, size string, userId string) (*GenerateImagesResponse, error) {
@@ -75,7 +76,7 @@ func (e *EditImagesRequest) AddMask(mask []byte) *EditImagesRequest {
 func (e *EditImagesRequest) Do() (*EditImageResponse, error) {
 	r := &EditImageResponse{}
 	var (
-		buf = new(bytes2.Buffer)
+		buf = new(bytes.Buffer)
 		w   = multipart.NewWriter(buf)
 	)
 	// If image is not nil, add it to the request
@@ -130,7 +131,7 @@ func (e *EditImagesRequest) Do() (*EditImageResponse, error) {
 		return nil, err
 	}
 	// Adding the bearer token header
-	request.Header.Set("Authorization", fmt.Sprintf("%s", constants.GetToken()))
+	request.Header.Set("Authorization", constants.GetToken())
 	// Now we add the multipart file data
 	// The image and mask are added as multipart form data
 	request.Header.Set("Content-Type", w.FormDataContentType())

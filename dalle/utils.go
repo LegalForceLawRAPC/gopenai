@@ -4,10 +4,11 @@ import (
 	bytes2 "bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/LegalForceLawRAPC/gopenai/constants"
-	"github.com/LegalForceLawRAPC/gopenai/errors"
 	"io"
 	"net/http"
+
+	"github.com/LegalForceLawRAPC/gopenai/constants"
+	"github.com/LegalForceLawRAPC/gopenai/errors"
 )
 
 func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError {
@@ -19,7 +20,7 @@ func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError 
 	if err != nil {
 		return &errors.ErrDefault
 	}
-	req.Header.Add("Authorization", d.getBearerToken())
+	req.Header.Add("Authorization", constants.GetToken())
 	if data.ContentType != "" {
 		req.Header.Add("Content-Type", data.ContentType)
 	} else {
@@ -39,8 +40,4 @@ func (d *Dalle) Do(data constants.RequestData, i interface{}) *errors.HttpError 
 		return errors.HandleHttpError(err, res.StatusCode)
 	}
 	return nil
-}
-
-func (d *Dalle) getBearerToken() string {
-	return fmt.Sprintf("Bearer %s", d.BasicAuth.ApiKey)
 }
