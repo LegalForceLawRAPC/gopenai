@@ -1,14 +1,16 @@
 package gopenai
 
 import (
-	"github.com/LegalForceLawRAPC/gopenai/constants"
-	"github.com/LegalForceLawRAPC/gopenai/dalle"
 	"net/http"
 	"time"
+
+	"github.com/LegalForceLawRAPC/gopenai/constants"
+	"github.com/LegalForceLawRAPC/gopenai/dalle"
 )
 
 var c *http.Client
 
+// NewClient creates a new openAI client
 func NewClient() *Client {
 	c = &http.Client{
 		Transport: &http.Transport{
@@ -39,6 +41,7 @@ func (c *Client) Connect(apiKey string, organisation string) error {
 	return nil
 }
 
+// ListModels returns a list of available models
 func (c *Client) ListModels() *ListModels {
 	if availableModels != nil {
 		return availableModels
@@ -53,6 +56,7 @@ func (c *Client) ListModels() *ListModels {
 	}
 }
 
+// Dalle returns a new dalle client
 func (c *Client) Dalle() *dalle.Dalle {
 	return &dalle.Dalle{
 		Client: c.client,
