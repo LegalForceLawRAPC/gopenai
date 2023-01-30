@@ -1,5 +1,6 @@
 package gopenai
 
+// ListModels is a struct that contains the list of models available to the user
 type ListModels struct {
 	Data []struct {
 		Id         string        `json:"id"`
