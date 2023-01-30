@@ -1,10 +1,15 @@
 package gopenai
 
-import "net/http"
+import (
+	"net/http"
+)
+
+var availableModels *ListModels
 
 type Client struct {
 	basicAuth basicAuth
 	client    *http.Client
+	SubClient interface{}
 }
 
 type basicAuth struct {
@@ -12,8 +17,7 @@ type basicAuth struct {
 	organisation string
 }
 
-type RequestData struct {
-	endpoint string
-	method   string
-	body     interface{}
+type Dalle struct {
+	client    *http.Client
+	basicAuth basicAuth
 }

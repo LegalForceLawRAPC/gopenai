@@ -9,8 +9,8 @@ import (
 	"net/http"
 )
 
-func (c *Client) Do(data RequestData, i interface{}) *errors.HttpError {
-	req, err := http.NewRequest(data.method, fmt.Sprintf("%s/%s", constants.BaseURL, data.endpoint), nil)
+func (c *Client) Do(data constants.RequestData, i interface{}) *errors.HttpError {
+	req, err := http.NewRequest(data.Method, fmt.Sprintf("%s/%s", constants.BaseURL, data.Endpoint), nil)
 	if err != nil {
 		return &errors.ErrDefault
 	}
